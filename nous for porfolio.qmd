@@ -1,0 +1,45 @@
+---
+title: "Nous Data Analytics: Student-Teacher Ratios"
+format: revealjs
+---
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ggplot2)
+data <- read_csv("nous.csv")
+colnames(data)[2] <- "State"
+colnames(data)[5] <- "ST_Ratio"
+```
+
+## Research Question
+
+How has the student-teacher ratio in Queensland's government-run high schools compared over time with:
+
+- Other school affiliations within Queensland
+- Schools in NSW and Victoria
+
+## Part 1 — Queensland School Affiliations
+```{r QLD-data}
+QLD_all <- data %>%
+  filter(State == "QLD")
+```
+
+The mean student-teacher ratio in Queensland is **`r round(mean(QLD_all$ST_Ratio), 1)`** — meaning for every teacher, there are ~14 students.
+
+## QLD Ratios by Affiliation (Bar)
+```{r QLD-bar}
+ggplot(QLD_all, aes(x = factor(Year), y = ST_Ratio, fill = Affiliation)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Year", y = "Student-Teacher Ratio",
+       title = "Student-Teacher Ratios by Affiliation in QLD") +
+  theme_minimal()
+```
+
+## QLD Ratios by Affiliation (Trend)
+```{r QLD-line}
+ggplot(QLD_all, aes(x = Year, y = ST_Ratio, color = Affiliation, group = Affiliation)) +
+  geom_point(size = 3) +
+  geom_line(size = 1) +
+  labs(x = "Year", y = "Student-Teacher Ratio",
+       title = "Student-Teacher Ratios by Affiliation in Queensland") +
+  theme_minimal()
+```
